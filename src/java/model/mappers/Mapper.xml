@@ -6,6 +6,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="Marca">
     <select id="getMarcas" resultType="beans.Marca">
         SELECT idmarca, nombre
-        FROM puntoventa.dbo.marca
+        FROM puntoventa.dbo.marca;
     </select>
+    
+    <select id="buscarPorNombre" resultType="beans.Marca" parameterType="string">
+        SELECT idmarca, nombre
+        FROM puntoventa.dbo.marca
+        WHERE nombre LIKE '%' + #{nombre} + '%';
+    </select>
+    
+    <insert id="registrar" parameterType="string">
+        INSERT INTO puntoventa.dbo.marca (nombre)
+        VALUES(#{nombre});
+    </insert>
 </mapper>
