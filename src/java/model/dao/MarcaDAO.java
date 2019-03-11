@@ -9,8 +9,6 @@ import beans.Marca;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.MyBatisUtils;
 import org.apache.ibatis.session.SqlSession;
 
@@ -72,6 +70,19 @@ public class MarcaDAO {
             }
         }
         
+        return filas;
+    }
+
+    public static int eliminarMarca(Integer idMarca) {
+        int filas = 0;
+        if (idMarca != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                filas = conn.delete("Marca.eliminar", idMarca);
+                conn.commit();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
         return filas;
     }
     

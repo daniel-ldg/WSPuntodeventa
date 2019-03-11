@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import beans.Marca;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
@@ -74,16 +75,28 @@ public class MarcasWS {
     @Produces(MediaType.TEXT_PLAIN)
     public String registrar(
             @FormParam("nombre") String nombre
-    ) {
-        String respuesta = "";
-        
+    ) {        
         int filas = 0;
         filas = MarcaDAO.registrarMarca(nombre);
         if (filas > 0) {
-            respuesta = "Registro afectado correctamente";
+            return "Registro afectado correctamente";
         } else {
-            respuesta = "No se puede ejecutar el registro";
+            return "No se puede ejecutar el registro";
         }
-        return respuesta;
+    }
+    
+    @DELETE
+    @Path("eliminar")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String eliminar(
+            @FormParam("idmarca") Integer idMarca
+    ) {
+        int filas;
+        filas = MarcaDAO.eliminarMarca(idMarca);
+        if (filas > 0) {
+            return "Registro eliminado";
+        } else {
+            return "Registro no eliminado";
+        }
     }
 }
