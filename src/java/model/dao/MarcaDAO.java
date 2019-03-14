@@ -8,6 +8,7 @@ package model.dao;
 import beans.Marca;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import model.MyBatisUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -84,6 +85,22 @@ public class MarcaDAO {
             }
         }
         return filas;
+    }
+
+    public static int actualizarMarca(Integer idMarca, String nombre) {
+        int filasAfectadas = 0;
+        if (idMarca != null && nombre != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                HashMap<String,Object> params = new HashMap<>();
+                params.put("idmarca", idMarca);
+                params.put("nombre", nombre);
+                filasAfectadas = conn.update("Marca.actualizar", params);
+                conn.commit();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return filasAfectadas;
     }
     
 }

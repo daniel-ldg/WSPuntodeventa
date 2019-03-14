@@ -24,4 +24,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         DELETE FROM puntoventa.dbo.marca
         WHERE idMarca = #{idMarca};
     </delete>
+    
+    <update id="actualizar" parameterType="map">
+        UPDATE puntoventa.dbo.marca SET
+        nombre = #{nombre}
+        WHERE idmarca = #{idmarca};
+    </update>
 </mapper>

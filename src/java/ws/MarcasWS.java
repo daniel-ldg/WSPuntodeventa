@@ -13,9 +13,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import beans.Marca;
+import beans.Respuesta;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import model.dao.MarcaDAO;
 
@@ -89,7 +91,7 @@ public class MarcasWS {
     @Path("eliminar")
     @Produces(MediaType.TEXT_PLAIN)
     public String eliminar(
-            @FormParam("idmarca") Integer idMarca
+            @FormParam("idMarca") Integer idMarca
     ) {
         int filas;
         filas = MarcaDAO.eliminarMarca(idMarca);
@@ -98,5 +100,24 @@ public class MarcasWS {
         } else {
             return "Registro no eliminado";
         }
+    }
+    
+    @PUT
+    @Path("actualizar")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Respuesta actualizar(
+            @FormParam("idmarca") Integer idMarca,
+            @FormParam("nombre") String nombre
+    ) {
+        Respuesta respuesta = new Respuesta();
+        int filasAfectadas;
+        filasAfectadas = MarcaDAO.actualizarMarca(idMarca, nombre);
+        if (filasAfectadas > 0) {
+            respuesta.setMensaje("Marca actualizada correctamente");
+        } else {
+            respuesta.setError(true);
+            respuesta.setMensaje("No se puede actualizar marca");
+        }
+        return respuesta;
     }
 }
