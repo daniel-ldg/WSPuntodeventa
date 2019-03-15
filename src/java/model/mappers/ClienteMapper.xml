@@ -14,4 +14,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         FROM puntoventa.dbo.cliente
         WHERE nombre LIKE '%' + #{nombre} + '%';
     </select>
+    
+    <insert id="registrarClienteMap" parameterType="map">
+        INSERT INTO puntoventa.dbo.cliente
+        (nombre, email, contraseña, direccion, telefono, usuario, token)
+        VALUES(#{nombre},#{email},#{contraseña},#{direccion},#{telefono},#{usuario},#{token});
+    </insert>
+    
+    <insert id="registrarClienteObject" parameterType="beans.Cliente"
+            useGeneratedKeys="true" keyProperty="idCliente">
+        INSERT INTO puntoventa.dbo.cliente
+        (nombre, email, contraseña, direccion, telefono, usuario, token)
+        VALUES(#{nombre},#{email},#{contraseña},#{direccion},#{telefono},#{usuario},#{token});
+    </insert>
 </mapper>
