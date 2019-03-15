@@ -30,14 +30,12 @@ public class ClienteDAO {
         }
         return list;
     }
-    
-    private static String genToken() {
-        return String.format("%04d", ThreadLocalRandom.current().nextInt(10000));
-    }
 
-    public static int registrarCliente(String nombre, String email, String contraseña, String direccion, String telefono, String usuario) {
+    public static int registrarCliente(String nombre, String email, String contraseña,
+            String direccion, String telefono, String usuario, String token) {
         int filasAfectadas = 0;
-        if (nombre != null && email != null && contraseña != null && direccion != null && telefono != null && usuario != null) {
+        if (nombre != null && email != null && contraseña != null && direccion != null
+                && telefono != null && usuario != null && token != null) {
             try (SqlSession conn = MyBatisUtils.getSession()) {
                 HashMap<String, Object> params = new HashMap<>();
                 params.put("nombre", nombre);
@@ -46,7 +44,7 @@ public class ClienteDAO {
                 params.put("direccion", direccion);
                 params.put("telefono", telefono);
                 params.put("usuario", usuario);
-                params.put("token", genToken());
+                params.put("token", token);
                 filasAfectadas = conn.insert("Cliente.registrarClienteMap", params);
                 conn.commit();
             } catch (IOException ex) {
@@ -60,7 +58,6 @@ public class ClienteDAO {
         int filasAfectadas = 0;
         if (cliente != null) {
             try (SqlSession conn = MyBatisUtils.getSession()) {
-                cliente.setToken(genToken());
                 filasAfectadas = conn.insert("Cliente.registrarClienteObject", cliente);
                 conn.commit();
             } catch (IOException ex) {
@@ -68,5 +65,29 @@ public class ClienteDAO {
             }
         }
         return filasAfectadas;
+    }
+    
+    public static boolean existeTelefonoCliente(String telefono) {
+        boolean resultado = true;
+        if (telefono != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                resultado = conn.selectOne("Cliente.existeTelefono", telefono);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+    
+    public static boolean existeUsuarioCliente(String usuario) {
+        boolean resultado = true;
+        if (usuario != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                resultado = conn.selectOne("Cliente.existeUsuario", usuario);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
     }
 }

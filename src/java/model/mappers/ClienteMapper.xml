@@ -27,4 +27,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         (nombre, email, contraseña, direccion, telefono, usuario, token)
         VALUES(#{nombre},#{email},#{contraseña},#{direccion},#{telefono},#{usuario},#{token});
     </insert>
+    
+    <select id="existeTelefono" resultType="boolean" parameterType="string">
+        SELECT
+            CASE WHEN EXISTS
+                (SELECT 1 FROM puntoventa.dbo.cliente WHERE telefono = #{telefono})
+            THEN 1
+            ELSE 0
+        END;
+    </select>
+    
+    <select id="existeUsuario" resultType="boolean" parameterType="string">
+        SELECT
+            CASE WHEN EXISTS
+                (SELECT 1 FROM puntoventa.dbo.cliente WHERE usuario = #{usuario})
+            THEN 1
+            ELSE 0
+        END;
+    </select>
 </mapper>
