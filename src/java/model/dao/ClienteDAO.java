@@ -67,11 +67,11 @@ public class ClienteDAO {
         return filasAfectadas;
     }
     
-    public static boolean existeTelefonoCliente(String telefono) {
-        boolean resultado = true;
-        if (telefono != null) {
+    public static boolean sePuedeRegistrarTelefono(Cliente cliente) {
+        boolean resultado = false;
+        if (cliente != null && cliente.getTelefono() != null) {
             try (SqlSession conn = MyBatisUtils.getSession()) {
-                resultado = conn.selectOne("Cliente.existeTelefono", telefono);
+                resultado = conn.selectOne("Cliente.sePuedeRegistrarTelefono", cliente);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -79,15 +79,89 @@ public class ClienteDAO {
         return resultado;
     }
     
-    public static boolean existeUsuarioCliente(String usuario) {
-        boolean resultado = true;
-        if (usuario != null) {
+    public static boolean sePuedeRegistrarUsuario(Cliente cliente) {
+        boolean resultado = false;
+        if (cliente != null && cliente.getUsuario() != null) {
             try (SqlSession conn = MyBatisUtils.getSession()) {
-                resultado = conn.selectOne("Cliente.existeUsuario", usuario);
+                resultado = conn.selectOne("Cliente.sePuedeRegistrarUsuario", cliente.getUsuario());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
         return resultado;
+    }
+    
+    public static boolean existeIdCliente(Integer idCliente) {
+        boolean resultado = false;
+        if (idCliente != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                resultado = conn.selectOne("Cliente.existeIdCliente", idCliente);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+    
+    public static boolean sePuedeActualizarTelefono(Cliente cliente) {
+        boolean resultado = false;
+        if (cliente != null && cliente.getTelefono() != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                resultado = conn.selectOne("Cliente.sePuedeActualizarTelefono", cliente);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+    
+    public static boolean sePuedeActualizarUsuario(Cliente cliente) {
+        boolean resultado = false;
+        if (cliente != null && cliente.getUsuario() != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                resultado = conn.selectOne("Cliente.sePuedeActualizarUsuario", cliente);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+
+    public static int actualizarCliente(Cliente cliente) {
+        int filasAfectadas = 0;
+        if (cliente != null && cliente.getIdCliente() != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                filasAfectadas = conn.update("Cliente.actualizarCliente", cliente);
+                conn.commit();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return filasAfectadas;
+    }
+    
+    public static boolean clienteTieneVentas(Integer idCliente) {
+        boolean resultado = true;
+        if (idCliente != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                resultado = conn.selectOne("Cliente.clienteTieneVentas", idCliente);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
+    }
+    
+    public static int eliminarCliente(Integer idCliente) {
+        int filasAfectadas = 0;
+        if (idCliente != null) {
+            try (SqlSession conn = MyBatisUtils.getSession()) {
+                filasAfectadas = conn.delete("Cliente.eliminarCliente", idCliente);
+                conn.commit();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return filasAfectadas;
     }
 }

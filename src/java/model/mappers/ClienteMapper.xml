@@ -28,21 +28,73 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         VALUES(#{nombre},#{email},#{contraseña},#{direccion},#{telefono},#{usuario},#{token});
     </insert>
     
-    <select id="existeTelefono" resultType="boolean" parameterType="string">
+    <select id="sePuedeRegistrarTelefono" resultType="boolean" parameterType="beans.Cliente">
         SELECT
             CASE WHEN EXISTS
                 (SELECT 1 FROM puntoventa.dbo.cliente WHERE telefono = #{telefono})
-            THEN 1
-            ELSE 0
-        END;
+            THEN 0
+            ELSE 1
+        END AS 'se_puede';
     </select>
     
-    <select id="existeUsuario" resultType="boolean" parameterType="string">
+    <select id="sePuedeRegistrarUsuario" resultType="boolean" parameterType="beans.Cliente">
         SELECT
             CASE WHEN EXISTS
                 (SELECT 1 FROM puntoventa.dbo.cliente WHERE usuario = #{usuario})
+            THEN 0
+            ELSE 1
+        END AS 'se_puede';
+    </select>
+    
+    <select id="existeIdCliente" resultType="boolean" parameterType="int">
+        SELECT
+            CASE WHEN EXISTS
+                (SELECT 1 FROM puntoventa.dbo.cliente WHERE idCliente = #{idCliente})
             THEN 1
             ELSE 0
-        END;
+        END AS 'existe';
     </select>
+    
+    <select id="sePuedeActualizarTelefono" resultType="boolean" parameterType="beans.Cliente">
+        SELECT
+            CASE WHEN EXISTS
+                (SELECT 1 FROM puntoventa.dbo.cliente WHERE telefono = #{telefono} AND idCliente != #{idCliente})
+            THEN 0
+            ELSE 1
+        END AS 'se_puede';
+    </select>
+    
+    <select id="sePuedeActualizarUsuario" resultType="boolean" parameterType="beans.Cliente">
+        SELECT
+            CASE WHEN EXISTS
+                (SELECT 1 FROM puntoventa.dbo.cliente WHERE usuario = #{usuario} AND idCliente != #{idCliente})
+            THEN 0
+            ELSE 1
+        END AS 'se_puede';
+    </select>
+    
+    <update id="actualizarCliente" parameterType="beans.Cliente">
+        UPDATE puntoventa.dbo.cliente SET
+        nombre = #{nombre},
+        email = #{email},
+        contraseña = #{contraseña},
+        direccion = #{direccion},
+        telefono = #{telefono},
+        usuario = #{usuario}
+        WHERE idCliente = #{idCliente};
+    </update>
+    
+    <select id="clienteTieneVentas" resultType="boolean" parameterType="int">
+        SELECT
+            CASE WHEN EXISTS
+                (SELECT TOP 1 1 FROM puntoventa.dbo.venta WHERE idCliente = #{idCliente})
+            THEN 1
+            ELSE 0
+        END AS 'tiene';
+    </select>
+    
+    <delete id="eliminarCliente" parameterType="int">
+        DELETE FROM puntoventa.dbo.cliente
+        WHERE idCliente = #{idCliente};
+    </delete>
 </mapper>
